@@ -1,0 +1,100 @@
+id,destino_id,peso_kg,descricao,valor_declarado
+DELIV_001,1,4.76,Medicamentos/Vacinas,3673.37
+DELIV_002,2,22.02,Insumos/Soro/Gaze,822.17
+DELIV_003,3,4.34,Medicamentos/Vacinas,3025.52
+DELIV_004,4,15.93,Insumos/Soro/Gaze,4851.05
+DELIV_005,5,24.56,Insumos/Soro/Gaze,950.03
+DELIV_006,6,1.59,Medicamentos/Vacinas,2647.54
+DELIV_007,7,1.53,Medicamentos/Vacinas,3078.67
+DELIV_008,8,1.53,Medicamentos/Vacinas,1863.49
+DELIV_009,9,3.95,Medicamentos/Vacinas,1038.39
+DELIV_010,10,41.66,Insumos/Soro/Gaze,279.93
+DELIV_011,11,22.67,Insumos/Soro/Gaze,372.01
+DELIV_012,12,487.97,Equipamentos Hospitalares,4051.57
+DELIV_013,13,0.58,Medicamentos/Vacinas,3436.95
+DELIV_014,14,0.7,Medicamentos/Vacinas,2501.13
+DELIV_015,15,4.56,Medicamentos/Vacinas,1330.96
+DELIV_016,16,29.03,Insumos/Soro/Gaze,2624.34
+DELIV_017,17,23.32,Insumos/Soro/Gaze,4849.44
+DELIV_018,18,57.28,Insumos/Soro/Gaze,4479.4
+DELIV_019,19,56.48,Insumos/Soro/Gaze,488.04
+DELIV_020,20,0.32,Medicamentos/Vacinas,1660.39
+DELIV_021,21,1.43,Medicamentos/Vacinas,4152.25
+DELIV_022,22,1.48,Medicamentos/Vacinas,2736.35
+DELIV_023,23,4.03,Medicamentos/Vacinas,419.03
+DELIV_024,24,420.29,Equipamentos Hospitalares,1033.64
+DELIV_025,25,4.1,Medicamentos/Vacinas,3548.94
+DELIV_026,26,49.71,Insumos/Soro/Gaze,416.52
+DELIV_027,27,0.67,Medicamentos/Vacinas,4322.36
+DELIV_028,28,29.89,Insumos/Soro/Gaze,364.61
+DELIV_029,29,1.69,Medicamentos/Vacinas,3661.55
+DELIV_030,30,54.92,Insumos/Soro/Gaze,2387.46
+DELIV_031,31,3.59,Medicamentos/Vacinas,3815.89
+DELIV_032,32,49.69,Insumos/Soro/Gaze,2494.29
+DELIV_033,33,34.24,Insumos/Soro/Gaze,175.82
+DELIV_034,34,0.25,Medicamentos/Vacinas,3200.23
+DELIV_035,35,2.59,Medicamentos/Vacinas,4542.45
+DELIV_036,36,2.11,Medicamentos/Vacinas,3789.98
+DELIV_037,37,0.48,Medicamentos/Vacinas,1484.27
+DELIV_038,38,4.66,Medicamentos/Vacinas,4050.2
+DELIV_039,39,54.22,Insumos/Soro/Gaze,4028.18
+DELIV_040,40,4.47,Medicamentos/Vacinas,2719.74
+DELIV_041,41,55.32,Insumos/Soro/Gaze,1624.12
+DELIV_042,42,1.22,Medicamentos/Vacinas,2164.18
+DELIV_043,43,53.73,Insumos/Soro/Gaze,84.41
+DELIV_044,44,33.78,Insumos/Soro/Gaze,1149.43
+DELIV_045,45,1.75,Medicamentos/Vacinas,4717.4
+DELIV_046,46,2.64,Medicamentos/Vacinas,3529.94
+DELIV_047,47,4.86,Medicamentos/Vacinas,4814.11
+DELIV_048,48,2.54,Medicamentos/Vacinas,1539.35
+DELIV_049,49,0.28,Medicamentos/Vacinas,3067.34
+DELIV_050,50,17.32,Insumos/Soro/Gaze,1429.3
+DELIV_051,51,233.85,Equipamentos Hospitalares,767.23
+DELIV_052,52,4.93,Medicamentos/Vacinas,1248.17
+DELIV_053,53,49.27,Insumos/Soro/Gaze,1226.31
+DELIV_054,54,31.55,Insumos/Soro/Gaze,3179.91
+DELIV_055,55,39.11,Insumos/Soro/Gaze,496.93
+DELIV_056,56,29.44,Insumos/Soro/Gaze,973.27
+DELIV_057,57,3.0,Medicamentos/Vacinas,3403.94
+DELIV_058,58,2.61,Medicamentos/Vacinas,1171.15
+DELIV_059,59,22.85,Insumos/Soro/Gaze,3470.14
+DELIV_060,60,4.69,Medicamentos/Vacinas,730.73
+DELIV_061,61,0.66,Medicamentos/Vacinas,4627.23
+DELIV_062,62,240.28,Equipamentos Hospitalares,3316.92
+DELIV_063,63,39.98,Insumos/Soro/Gaze,2671.77
+DELIV_064,64,0.56,Medicamentos/Vacinas,4491.22
+DELIV_065,65,371.59,Equipamentos Hospitalares,1728.2
+DELIV_066,66,3.66,Medicamentos/Vacinas,4490.7
+DELIV_067,67,422.96,Equipamentos Hospitalares,3228.06
+DELIV_068,68,0.89,Medicamentos/Vacinas,4497.84
+DELIV_069,69,15.41,Insumos/Soro/Gaze,552.28
+DELIV_070,70,15.23,Insumos/Soro/Gaze,846.0
+DELIV_071,71,46.14,Insumos/Soro/Gaze,3277.21
+DELIV_072,72,3.59,Medicamentos/Vacinas,1224.38
+DELIV_073,73,3.76,Medicamentos/Vacinas,3265.68
+DELIV_074,74,44.59,Insumos/Soro/Gaze,2863.13
+DELIV_075,75,1.9,Medicamentos/Vacinas,1362.75
+DELIV_076,76,4.87,Medicamentos/Vacinas,1995.83
+DELIV_077,77,370.9,Equipamentos Hospitalares,3984.32
+DELIV_078,78,40.96,Insumos/Soro/Gaze,2487.96
+DELIV_079,79,3.64,Medicamentos/Vacinas,1439.82
+DELIV_080,80,3.26,Medicamentos/Vacinas,926.7
+DELIV_081,81,483.88,Equipamentos Hospitalares,4578.58
+DELIV_082,82,0.18,Medicamentos/Vacinas,4645.18
+DELIV_083,83,4.84,Medicamentos/Vacinas,4819.92
+DELIV_084,84,253.06,Equipamentos Hospitalares,1956.23
+DELIV_085,85,260.92,Equipamentos Hospitalares,888.99
+DELIV_086,86,57.13,Insumos/Soro/Gaze,3495.35
+DELIV_087,87,19.37,Insumos/Soro/Gaze,3094.29
+DELIV_088,88,199.03,Equipamentos Hospitalares,2615.73
+DELIV_089,89,409.27,Equipamentos Hospitalares,3500.23
+DELIV_090,90,31.18,Insumos/Soro/Gaze,1503.28
+DELIV_091,91,51.46,Insumos/Soro/Gaze,4342.01
+DELIV_092,92,328.97,Equipamentos Hospitalares,2532.51
+DELIV_093,93,44.25,Insumos/Soro/Gaze,3524.74
+DELIV_094,94,55.05,Insumos/Soro/Gaze,1723.08
+DELIV_095,95,0.56,Medicamentos/Vacinas,2912.49
+DELIV_096,96,2.38,Medicamentos/Vacinas,2736.09
+DELIV_097,97,3.0,Medicamentos/Vacinas,200.98
+DELIV_098,98,4.13,Medicamentos/Vacinas,1832.94
+DELIV_099,99,2.66,Medicamentos/Vacinas,3861.47

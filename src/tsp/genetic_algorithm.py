@@ -1,47 +1,92 @@
 import random
-import pygame
-from .fitness import fitness_function
-from .crossover import ordered_crossover
-from .mutation import swap_mutation
-from src.visualization.map_routes import atualizar_tela_evolucao
+import numpy as np
+import matplotlib.pyplot as plt
+import uuid # Para gerar IDs únicos para cada gráfico
+from IPython.display import clear_output
+from tsp.population import create_population
+from tsp.crossover import order_crossover
+from tsp.mutation import swap_mutation
+from tsp.fitness import fitness_function
+from visualization.map_routes import visualizar_no_subplot
 
-def run_genetic_algorithm(df_destinos, veiculo_obj, pop_size=50, generations=100):
-    pygame.init()
-    tela = pygame.display.set_mode((800, 600))
-    
-    destinos_ids = list(df_destinos['id'].values)
-    destinos_ids.remove(0)
-    
-    population = [random.sample(destinos_ids, len(destinos_ids)) for _ in range(pop_size)]
-    best_individual = population[0]
-    best_fitness = float('inf')
-    historico_fitness = []
+
+def tournament_selection(population, fitness_scores, k=3):
+
+    selected = random.sample(list(zip(population, fitness_scores)), k)
+
+    selected.sort(key=lambda x: x[1])
+
+    return selected[0][0]
+
+
+def run_ga(df_destinos, veiculo,
+           pop_size=100,
+           generations=200,
+           mutation_rate=0.05,
+           visualize=True):
+
+    num_destinos = len(df_destinos)
+
+    population = create_population(pop_size, num_destinos)
+
+    best_fitness_history = []
+    history_v = []
 
     for gen in range(generations):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return best_individual, best_fitness, historico_fitness
 
-        # Avaliação e Elitismo
-        fits = [(ind, fitness_function(ind, df_destinos, veiculo_obj)) for ind in population]
-        fits.sort(key=lambda x: x[1])
+        fitness_scores = [
+            fitness_function(ind, df_destinos, veiculo)
+            for ind in population
+        ]
+
+        new_population = []
+        # ELITISMO: Salva o melhor indivíduo da geração anterior direto na nova
+        best_idx = np.argmin(fitness_scores)
+        best_individual = population[best_idx]
+        history_v.append(fitness_scores[best_idx])
+
+        # INTERATIVIDADE: Atualiza o gráfico a cada 10 gerações
+        if visualize and gen % 1 == 0:
+            clear_output(wait=True) # Limpa a saída anterior sem "piscar" a tela
+            
+            # Criamos uma figura com dois subplots (Lado a lado)
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+            
+            # 1. Plotar o Gráfico de Evolução (Histórico) no ax1
+            ax1.plot(history_v, color='green')
+            ax1.set_title(f"Geração {gen} - Evolução do Custo")
+            ax1.set_xlabel("Geração")
+            ax1.set_ylabel("Custo Total")
+            ax1.grid(True, linestyle=':', alpha=0.6)
+
+            # 2. Plotar o Mapa no ax2 (Chamando sua função pro que criamos)
+            # Nota: vamos passar o 'ax' para a função desenhar dentro do subplot
+            visualizar_no_subplot(ax2, df_destinos, best_individual, veiculo, titulo=f"Mapa de Rotas - Gen {gen}")
+            
+            plt.tight_layout()
+            plt.show() # Exibe o quadro atual
+
+        for _ in range(pop_size):
+
+            parent1 = tournament_selection(population, fitness_scores)
+            parent2 = tournament_selection(population, fitness_scores)
+
+            child = order_crossover(parent1, parent2)
+
+            child = swap_mutation(child, mutation_rate)
+
+            new_population.append(child)
+
+        population = new_population
+
+        best_fitness = min(fitness_scores)
+        best_fitness_history.append(best_fitness)
+
         
-        if fits[0][1] < best_fitness:
-            best_fitness = fits[0][1]
-            best_individual = fits[0][0]
-        
-        historico_fitness.append(best_fitness)
-        atualizar_tela_evolucao(tela, df_destinos, best_individual, gen, best_fitness)
 
-        # Evolução
-        new_pop = [f[0] for f in fits[:2]]
-        while len(new_pop) < pop_size:
-            p1, p2 = random.sample([f[0] for f in fits[:10]], 2)
-            child = ordered_crossover(p1, p2)
-            new_pop.append(swap_mutation(child))
-        population = new_pop
+    best_index = np.argmin(fitness_scores)
 
-    pygame.time.delay(2000)
-    pygame.quit()
-    return best_individual, best_fitness, historico_fitness
+    best_solution = population[best_index]
+    print(f"Geração {gen} | Melhor fitness: {best_fitness}")
+
+    return best_solution, best_fitness_history, population

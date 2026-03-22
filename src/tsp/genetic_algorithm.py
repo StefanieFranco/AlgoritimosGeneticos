@@ -2,7 +2,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import uuid # Para gerar IDs únicos para cada gráfico
-from IPython.display import clear_output
+from IPython.display import clear_output, display, update_display
 from tsp.population import create_population
 from tsp.crossover import order_crossover
 from tsp.mutation import swap_mutation
@@ -23,6 +23,8 @@ def run_ga(df_destinos, veiculo,
            pop_size=100,
            generations=200,
            mutation_rate=0.05,
+           patience=20,
+           display_id=None,           
            visualize=True):
 
     num_destinos = len(df_destinos)
@@ -31,6 +33,8 @@ def run_ga(df_destinos, veiculo,
 
     best_fitness_history = []
     history_v = []
+    best_fitness_global = float('inf')
+    generations_without_improvement = 0
 
     for gen in range(generations):
 
@@ -44,10 +48,17 @@ def run_ga(df_destinos, veiculo,
         best_idx = np.argmin(fitness_scores)
         best_individual = population[best_idx]
         history_v.append(fitness_scores[best_idx])
+        current_best_fitness = fitness_scores[best_idx]
+
+        if current_best_fitness < best_fitness_global:
+            best_fitness_global = current_best_fitness
+            generations_without_improvement = 0
+        else:
+            generations_without_improvement += 1
 
         # INTERATIVIDADE: Atualiza o gráfico a cada 10 gerações
         if visualize and gen % 1 == 0:
-            clear_output(wait=True) # Limpa a saída anterior sem "piscar" a tela
+            #clear_output(wait=True) # Limpa a saída anterior sem "piscar" a tela
             
             # Criamos uma figura com dois subplots (Lado a lado)
             fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
@@ -63,8 +74,19 @@ def run_ga(df_destinos, veiculo,
             # Nota: vamos passar o 'ax' para a função desenhar dentro do subplot
             visualizar_no_subplot(ax2, df_destinos, best_individual, veiculo, titulo=f"Mapa de Rotas - Gen {gen}")
             
-            plt.tight_layout()
-            plt.show() # Exibe o quadro atual
+            if display_id:
+                update_display(fig, display_id=display_id)
+            else:
+                clear_output(wait=True)
+                display(fig)
+            
+            plt.close(fig) # Exibe o quadro atual
+        
+        # 4. Verificação da Parada Precoce
+        if generations_without_improvement >= patience:
+            print(f"\n🛑 Estagnação detectada! Parando na geração {gen}.")
+            print(f"O resultado não melhora há {patience} gerações.")
+            break
 
         for _ in range(pop_size):
 

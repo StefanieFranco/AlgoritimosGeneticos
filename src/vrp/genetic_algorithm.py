@@ -1,11 +1,13 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-
+import uuid # Para gerar IDs únicos para cada gráfico
+from IPython.display import clear_output, display, update_display
 from vrp.population import create_population_vrp
 from vrp.crossover import crossover_vrp
 from vrp.mutation import mutate_vrp
 from vrp.fitness import fitness_function_vrp
+from visualization.map_routes import visualizar_no_subplot
 
 
 def tournament_selection_vrp(population, fitness_scores, k=3):
@@ -17,13 +19,14 @@ def tournament_selection_vrp(population, fitness_scores, k=3):
     return selected[0][0]
 
 
-def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_rate=0.05):
+def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_rate=0.05, display_id=None, visualize=True):
     num_destinos = len(df_destinos)
     num_vehicles = len(vehicles)
     
     # 1. População inicial
     population = create_population_vrp(pop_size, num_destinos, num_vehicles)
     history = []
+    history_v = []
 
     for gen in range(generations):
         # 2. Cálculo do Fitness de toda a população atual
@@ -36,7 +39,35 @@ def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_ra
 
         # ELITISMO: Salva o melhor indivíduo da geração anterior direto na nova
         best_idx = np.argmin(fitness_scores)
+        best_individual = population[best_idx]
+        history_v.append(fitness_scores[best_idx])
         new_population.append(population[best_idx])
+
+        # INTERATIVIDADE: Atualiza o gráfico a cada 10 gerações
+        if visualize and gen % 1 == 0:
+            #clear_output(wait=True) # Limpa a saída anterior sem "piscar" a tela
+            
+            # Criamos uma figura com dois subplots (Lado a lado)
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+            
+            # 1. Plotar o Gráfico de Evolução (Histórico) no ax1
+            ax1.plot(history_v, color='green')
+            ax1.set_title(f"Geração {gen} - Evolução do Custo")
+            ax1.set_xlabel("Geração")
+            ax1.set_ylabel("Custo Total")
+            ax1.grid(True, linestyle=':', alpha=0.6)
+
+            # 2. Plotar o Mapa no ax2 (Chamando sua função pro que criamos)
+            # Nota: vamos passar o 'ax' para a função desenhar dentro do subplot
+            visualizar_no_subplot(ax2, df_destinos, best_individual, vehicles, titulo=f"Mapa de Rotas - Gen {gen}")
+            
+            if display_id:
+                update_display(fig, display_id=display_id)
+            else:
+                clear_output(wait=True)
+                display(fig)
+            
+            plt.close(fig) # Exibe o quadro atual
 
         # 3. Loop para criar os novos filhos até encher a nova população
         while len(new_population) < pop_size:

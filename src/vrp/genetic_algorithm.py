@@ -19,7 +19,7 @@ def tournament_selection_vrp(population, fitness_scores, k=3):
     return selected[0][0]
 
 
-def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_rate=0.05, display_id=None, visualize=True):
+def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_rate=0.05, patience=20, display_id=None, visualize=True):
     num_destinos = len(df_destinos)
     num_vehicles = len(vehicles)
     
@@ -27,6 +27,8 @@ def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_ra
     population = create_population_vrp(pop_size, num_destinos, num_vehicles)
     history = []
     history_v = []
+    best_fitness_global = float('inf')
+    generations_without_improvement = 0
 
     for gen in range(generations):
         # 2. Cálculo do Fitness de toda a população atual
@@ -42,6 +44,13 @@ def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_ra
         best_individual = population[best_idx]
         history_v.append(fitness_scores[best_idx])
         new_population.append(population[best_idx])
+        current_best_fitness = fitness_scores[best_idx]
+
+        if current_best_fitness < best_fitness_global:
+            best_fitness_global = current_best_fitness
+            generations_without_improvement = 0
+        else:
+            generations_without_improvement += 1
 
         # INTERATIVIDADE: Atualiza o gráfico a cada 10 gerações
         if visualize and gen % 1 == 0:
@@ -68,6 +77,12 @@ def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_ra
                 display(fig)
             
             plt.close(fig) # Exibe o quadro atual
+
+        # 4. Verificação da Parada Precoce
+        if generations_without_improvement >= patience:
+            print(f"\n🛑 Estagnação detectada! Parando na geração {gen}.")
+            print(f"O resultado não melhora há {patience} gerações.")
+            break
 
         # 3. Loop para criar os novos filhos até encher a nova população
         while len(new_population) < pop_size:

@@ -17,48 +17,74 @@ def tournament_selection_vrp(population, fitness_scores, k=3):
     return selected[0][0]
 
 
-def run_ga_vrp(df_destinos, vehicles,
-           pop_size=100,
-           generations=200,
-           mutation_rate=0.05):
-
+def run_ga_vrp(df_destinos, vehicles, pop_size=100, generations=200, mutation_rate=0.05):
     num_destinos = len(df_destinos)
     num_vehicles = len(vehicles)
-
+    
+    # 1. População inicial
     population = create_population_vrp(pop_size, num_destinos, num_vehicles)
-
     history = []
 
     for gen in range(generations):
-
+        # 2. Cálculo do Fitness de toda a população atual
         fitness_scores = [
-            fitness_function_vrp(ind, df_destinos, vehicles)
+            fitness_function_vrp(ind, df_destinos, vehicles) 
             for ind in population
         ]
 
         new_population = []
 
-        for _ in range(pop_size):
+        # ELITISMO: Salva o melhor indivíduo da geração anterior direto na nova
+        best_idx = np.argmin(fitness_scores)
+        new_population.append(population[best_idx])
 
+        # 3. Loop para criar os novos filhos até encher a nova população
+        while len(new_population) < pop_size:
             p1 = tournament_selection_vrp(population, fitness_scores)
             p2 = tournament_selection_vrp(population, fitness_scores)
 
             child = crossover_vrp(p1, p2)
-
             child = mutate_vrp(child, mutation_rate)
 
-            new_population.append(child)
-
-        population = new_population
-
-        best = min(fitness_scores)
-
-        history.append(best)
+            # --- AQUI ENTRA A VALIDAÇÃO ---
+            # Verificamos se o filho gerado é válido (não repete hospitais e não esquece nenhum)
+            e_valido, motivo = validar_individuo_vrp(child, num_destinos - 1)
+            
+            if e_valido:
+                new_population.append(child)
+            else:
+                # Se for inválido, podemos tentar gerar outro ou aplicar uma penalidade
+                # No VRP, o ideal é que o crossover já gere filhos válidos, 
+                # mas essa trava garante que o erro não passe.
+                continue 
         
-    best_index = np.argmin(fitness_scores)
-    print(f"Geração {gen} | Best: {best}")
+        population = new_population
+        best_fitness = min(fitness_scores)
+        history.append(best_fitness)
 
+        if gen % 10 == 0:
+            print(f"Geração {gen} | Melhor Fitness: {best_fitness:.2f}")
+
+    best_index = np.argmin(fitness_scores)
     return population[best_index], history, population
+
+
+def validar_individuo_vrp(individual, total_esperado_hospitais):
+    # 'individual' é [[rota_moto1], [rota_moto2], [rota_caminhao]]
+    
+    # Transforma todas as rotas em uma lista única (flatten)
+    todos_destinos = [dest for rota in individual for dest in rota]
+    
+    # 1. Verificar Duplicados
+    if len(todos_destinos) != len(set(todos_destinos)):
+        return False, "Hospital visitado por mais de um veículo!"
+        
+    # 2. Verificar se algum hospital ficou de fora
+    # (Excluímos o ID 0 pois ele é a Base e não entra na lista de visitas)
+    if len(todos_destinos) != total_esperado_hospitais:
+        return False, "Algum hospital não recebeu entrega!"
+        
+    return True, "OK"
 
 def plot_routes_vrp(routes, df):
 

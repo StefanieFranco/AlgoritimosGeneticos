@@ -10,7 +10,7 @@ class ReportGenerator:
         # Inicializa o cliente moderno
         self.client = genai.Client(api_key=api_key)
         # Usaremos o 2.0-flash que apareceu na sua lista e é super estável
-        self.model_id = "gemini-2.0-flash" 
+        self.model_id = "gemini-2.5-flash" 
 
     def formatar_dados_rota(self, rota, df_destinos, veiculo_obj, custo_final):
         """Extrai as métricas reais para o prompt."""

@@ -112,3 +112,33 @@ def run_ga(df_destinos, veiculo,
     print(f"Geração {gen} | Melhor fitness: {best_fitness}")
 
     return best_solution, best_fitness_history, population
+
+def plot_ocupacao_tsp(rota_campea, df_destinos, veiculo, titulo="Ocupação TSP"):
+    # Calcula a carga total entregue na rota
+    carga_total = df_destinos.iloc[rota_campea]['peso_kg'].sum()
+    
+    # Extrai capacidade (proteção contra Pandas Series)
+    capacidade = veiculo["capacidade_kg"].iloc[0] if hasattr(veiculo["capacidade_kg"], 'iloc') else veiculo["capacidade_kg"]
+    v_nome = veiculo["tipo"].iloc[0] if hasattr(veiculo["tipo"], 'iloc') else veiculo["tipo"]
+
+    plt.figure(figsize=(8, 6))
+    plt.bar([v_nome], [capacidade], color='lightgray', label='Capacidade Nominal')
+    plt.bar([v_nome], [carga_total], color='orange', alpha=0.7, label='Carga Total Entregue')
+
+    # Lógica de label para múltiplas viagens
+    viagens = np.ceil(carga_total / capacidade)
+    if viagens > 1:
+        texto_label = f"{int(viagens)} Viagens Reais"
+        cor_label = 'red'
+    else:
+        texto_label = f"{(carga_total/capacidade)*100:.1f}%"
+        cor_label = 'black'
+
+    plt.text(0, carga_total + (carga_total*0.05), texto_label, 
+             ha='center', fontweight='bold', color=cor_label)
+
+    plt.title(titulo)
+    plt.ylabel("Peso (kg)")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()

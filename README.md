@@ -34,34 +34,59 @@ pip install -r requirements.txt
 
 jupyter notebook
 
-## Análise dos Gráficos
+Arquivo principal com relatório é o Result.ipynb
 
-<img width="572" height="390" alt="image" src="https://github.com/user-attachments/assets/10696d34-5c66-4ad1-8cfa-c77e60c82f7d" />
+### Restrições Operacionais aplicadas
 
-Idade (Age): É o preditor mais forte. Note que o pico de AVC (laranja) ocorre a partir dos 60 anos, 
-enquanto os casos negativos estão distribuídos em todas as idades.
+A função de fitness foi desenvolvida para transpor a complexidade logística do mundo real para o modelo matemático, indo além da simples minimização de distância. O cálculo baseia-se no custo operacional direto (quilometragem percorrida multiplicada pelo custo por km do veículo), ao qual é aplicado um sistema de funções de penalidade (penalty functions) que balizam a viabilidade das rotas.
 
-<img width="582" height="383" alt="image" src="https://github.com/user-attachments/assets/eaf224fd-ec57-4433-bc26-897d809df213" />
+#### O desempenho de cada solução é avaliado através de cinco pilares estruturais:
 
-Glicose (avg_glucose_level): Há uma distribuição bimodal. O segundo pico de glicose alta (>200) mostra 
-uma concentração proporcionalmente maior de casos de AVC.
+O processo de otimização segue as seguintes etapas:
 
-<img width="571" height="374" alt="image" src="https://github.com/user-attachments/assets/ef6b4f51-1aa1-4258-a40c-151a0c27a75c" />
-<img width="573" height="378" alt="image" src="https://github.com/user-attachments/assets/d6cc486f-1484-4da7-ba8b-7e2b45c071ca" />
+1. **Dinâmica de Carga e Reabastecimento:**
+   O modelo simula a ocupação física do veículo. Sempre que o peso total dos pedidos excede a capacidade nominal, o algoritmo obriga o retorno ao Centro de Distribuição, contabilizando um incremento fixo de 15 minutos para carregamento, além do deslocamento adicional.
 
-Desbalanceamento: O gráfico de "hypertension" e "heart_disease" mostra que, embora essas condições 
-aumentem o risco, a vasta maioria da sua base não as possui e não teve AVC. Isso pode fazer com que 
-modelos simples "ignorem" quem tem hipertensão por falta de exemplos positivos suficientes.
+2. **Gestão de Risco e Segurança:**
+   O modelo incorpora uma regra de segurança patrimonial, aplicando penalidades severas para o transporte de cargas de alto valor (acima de R$ 3.000,00) em motocicletas, incentivando o uso de veículos mais seguros para itens críticos.
 
-## Resultados Obtidos
-Este estudo buscou desenvolver um modelo de triagem para a identificação de pacientes sob alto risco de AVC. O foco central da modelagem foi a segurança clínica, priorizando a sensibilidade (recall) para minimizar a ocorrência de falsos negativos. Após a avaliação comparativa entre os algoritmos KNN, Random Forest e Regressão Logística, esta última apresentou o desempenho mais robusto e adequado para a aplicação proposta.
+3. **Priorização e Urgência:**
+   A função favorece o atendimento precoce a destinos sensíveis (hospitais e prioridade nível 1) através de um fator multiplicador baseado na ordem de entrega. **Complementarmente, o modelo aplica uma bonificação (redução do custo total)** quando identifica o uso eficiente de motocicletas para pedidos prioritários de baixo valor. Essa lógica incentiva o algoritmo a aproveitar a agilidade e o baixo custo desse modal para demandas urgentes que não comprometam a segurança da carga.
 
-Enquanto modelos como o Random Forest apresentaram dificuldades em lidar com o desbalanceamento da classe minoritária, a Regressão Logística obteve um Recall aproximado de 80%. Em um contexto de saúde pública, essa métrica é fundamental, pois garante a identificação de 80% dos casos reais, permitindo intervenções adequadas. Como exemplificado nas imagens abaixo:
+4. **Janelas de Atendimento e Jornada:**
+   O algoritmo monitora o tempo acumulado de viagem. Se o horário de chegada em um destino de perfil "comercial" ultrapassar o limite de 8 horas de turno (480 min), a rota é penalizada por inviabilidade de cumprimento de horário.
 
-<img width="551" height="464" alt="image" src="https://github.com/user-attachments/assets/55ff7258-cee2-4f6f-9ce1-d29ec9288751" />
+5. **Avaliação (Fitness):**
+   - Cálculo do custo total da rota considerando distância, capacidade
+     do veículo, autonomia e prioridade de entregas.
 
-<img width="1481" height="707" alt="image" src="https://github.com/user-attachments/assets/c5061966-0ff8-463f-844f-9a908382e426" />
+6. **Autonomia e Restrições de Frota:**
+   São aplicadas travas rígidas para garantir que a quilometragem total não exceda a autonomia do veículo. Além disso, o modelo restringe o uso de caminhões em contextos puramente comerciais, buscando uma alocação de frota mais eficiente para zonas urbanas densas.
+
+## Resultados Obtidos TSP
+Em exemplo executado com o seguinte detalhes
+População = 150
+gerações = 2000
+mutação = 0.1
+veículo = mini truck
+
+<img width="2198" height="1072" alt="image" src="https://github.com/user-attachments/assets/730f6dc0-5519-48ae-b26f-e47ebd18e82c" />
+
+<img width="2390" height="702" alt="image" src="https://github.com/user-attachments/assets/9f2f7ef1-ca64-42f4-b5e0-b30140aae6f1" />
+
+## Resultados Obtidos VRP
+Em exemplo executado com o seguinte detalhes
+População = 150
+gerações = 2000
+mutação = 0.1
+veículo = frota completa (5 motos, 5 mini trucks, 5 caminhões)
 
 
-Conclui-se que a Regressão Logística é a ferramenta mais indicada para compor um sistema de apoio à decisão clínica. Sua implementação pode servir como um filtro inicial de triagem, sinalizando pacientes prioritários para avaliação médica detalhada e exames confirmatórios. Lembrando que a ferramenta serve de suporte e não substitui a análise de um médico.
+<img width="2246" height="1059" alt="image" src="https://github.com/user-attachments/assets/45207b4d-a9a6-4080-ae80-0289d06a9e12" />
+
+<img width="2070" height="1180" alt="image" src="https://github.com/user-attachments/assets/571d04b0-157a-434c-8eee-329af1230557" />
+
+
+<img width="2312" height="695" alt="image" src="https://github.com/user-attachments/assets/580df9a3-d1e4-4541-85af-926586db4694" />
+
 
